@@ -59,9 +59,15 @@ else
   bootldr="boot.loader.grub.device = \"$grubdev\";"
 fi
 
-minram=2048 # MiB
-if [ "$(awk '/MemTotal/ {print int($2/1024)}' /proc/meminfo)" -lt $minram ]; then
-  swapdev="swapDevices = [{ device = \"/swap\"; size = $minram; }];"
+minram=4096 # MiB
+curram=$(awk '/MemTotal/ {print int($2/1024)}' /proc/meminfo)
+swapsz=$(( $minram - $curram ))
+if [ "$curram" -lt "$minram" ]; then
+  swapdev="swapDevices = [{ device = \"/swap\"; size = $swapsz; }];"
+  swapoff -a
+  dd if=/dev/zero of=/swap bs=1M count=$swapsz
+  mkswap /swap
+  swapon /swap
 fi
 
 netif=$(ip -6 address show | grep '^2:' | awk -F': ' '{print $2}')

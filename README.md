@@ -110,7 +110,7 @@ _nixos-bite_ is implemented as a straight line sequence of actions with a minimu
 2. Source OS package manager is used to install required tools.
 3. Root (`/`) and boot (`/boot` or its subdirectory) filesystem configuration is extracted. These filesystems are labelled `root` (using `e2label`) and `boot` (using `fatlabel`) correspondingly. Other mountpoints are ignored.
 4. Bootloader is configured depending on whether the system uses BIOS or UEFI (indicated by presence of `/sys/firmware/efi`).
-5. **For systems with less than 2 GiB of RAM:** 2 GiB of swap is added as a file `/swap` on the root filesystem. Any existing swap partitions are ignored.
+5. **For systems with less than 4 GiB of RAM:** Up to 4 GiB of swap is added as a file `/swap` on the root filesystem. Any existing swap partitions are ignored.
 6. Host name, IPv4/IPv6 addresses, and default routes are extracted.
 7. DNS resolver configuration is replaced with [Quad9].
 8. Authorized SSH public keys for user `root` are extracted.
