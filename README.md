@@ -45,12 +45,12 @@ While _nixos-bite_ isn't tied to a specific provider, differences in environment
 
 | Date       | Provider      | Configuration            | Source OS             | Target OS         | Result |
 | ---------- | ------------- | ------------------------ | --------------------- | ----------------- | ------ |
-| 2025-10-05 | [Datalix]     | IPv6 Only, Small, BIOS   | Debian 13 (trixie)    | NixOS 25.05       | ✔      |
-| 2025-10-05 | [Datalix]     | IPv6 Only, Small, UEFI   | Debian 13 (trixie)    | NixOS 25.05       | ✔      |
-| 2025-10-05 | [Hetzner]     | CPX11 (Intel/AMD)        | Debian 13 (trixie)    | NixOS 25.05       | ✔      |
-| 2025-10-05 | [Hetzner]     | CAX11 (Ampere)           | Debian 13 (trixie)    | NixOS 25.05       | ✔      |
-| 2025-10-05 | [Vultr]       | vc2-1c-1gb               | Debian 13 (trixie)    | NixOS 25.05       | ✔      |
-| 2025-10-05 | [Vultr]       | vc2-1c-0.5gb-v6          | Debian 13 (trixie)    | NixOS 25.05       | ✘ (not enough RAM) |
+| 2025-10-05 | [Datalix]     | IPv6 Only, Small, BIOS   | Debian 13 (trixie)    | NixOS 25.05       | ✅      |
+| 2025-10-05 | [Datalix]     | IPv6 Only, Small, UEFI   | Debian 13 (trixie)    | NixOS 25.05       | ✅      |
+| 2025-10-05 | [Hetzner]     | CPX11 (Intel/AMD)        | Debian 13 (trixie)    | NixOS 25.05       | ✅      |
+| 2025-10-05 | [Hetzner]     | CAX11 (Ampere)           | Debian 13 (trixie)    | NixOS 25.05       | ✅      |
+| 2025-10-05 | [Vultr]       | vc2-1c-1gb               | Debian 13 (trixie)    | NixOS 25.05       | ✅      |
+| 2025-10-05 | [Vultr]       | vc2-1c-0.5gb-v6          | Debian 13 (trixie)    | NixOS 25.05       | ⛔ (not enough RAM) |
 
 If you tried _nixos-bite_ and found it to either succeed or fail on a configuration not listed above, please submit a pull request updating the compatibility table.
 
