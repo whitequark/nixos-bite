@@ -38,6 +38,8 @@ Alternately, run the following commands on your VPS while logged in as `root`:
 # curl https://codeberg.org/whitequark/nixos-bite/raw/branch/main/nixos-bite.sh | bash -s reboot
 ```
 
+[cloud-init]: https://cloudinit.readthedocs.io/
+
 
 ## Compatibility
 
