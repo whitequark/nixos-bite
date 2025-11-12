@@ -177,12 +177,14 @@ echo etc/resolv.conf >> /etc/NIXOS_LUSTRATE
 echo root/.nix-defexpr/channels >> /etc/NIXOS_LUSTRATE
 (cd / && ls etc/ssh/ssh_host_*_key* || true) >> /etc/NIXOS_LUSTRATE
 
-# place bootloader files into /boot only on EFI systems
-umount $bootfsdev
-rm -fr /boot/*
-if [[ -d /sys/firmware/efi ]]; then
-  mount $bootfsdev /boot
+# place bootloader files into /boot partition only on EFI systems
+if [[ -n "$bootfsdev" ]]; then
+  umount $bootfsdev
   rm -fr /boot/*
+  if [[ -d /sys/firmware/efi ]]; then
+    mount $bootfsdev /boot
+    rm -fr /boot/*
+  fi
 fi
 /nix/var/nix/profiles/system/bin/switch-to-configuration boot
 
