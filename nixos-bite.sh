@@ -97,6 +97,7 @@ cat > /etc/nixos/configuration.nix <<EOF
   imports = [ (modulesPath + "/profiles/qemu-guest.nix") ];
   fileSystems."/" = { device = "$rootfsdev"; fsType = "$rootfstype"; };
   $bootldr
+  boot.loader.timeout = 30;
   boot.initrd.availableKernelModules = [ "ata_piix" "uhci_hcd" "xen_blkfront" ];
   boot.initrd.kernelModules = [ "nvme" ];
   boot.tmp.cleanOnBoot = true;
