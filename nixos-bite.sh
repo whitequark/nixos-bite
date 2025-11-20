@@ -70,7 +70,7 @@ if [ "$curram" -lt "$minram" ]; then
   swapon /swap
 fi
 
-netif=$(ip -6 address show | grep '^2:' | awk -F': ' '{print $2}')
+netif=$(ip -6 route show default | sed -r 's|default.+?dev ([a-z0-9]+).*|\1|' | head -n1)
 netip6=$(ip -6 address show dev "$netif" scope global | sed -z -r 's|.*inet6 ([0-9a-f:]+)/([0-9]+).*|"\1/\2"|')
 netgw6=$(ip -6 route show dev "$netif" default | sed -r 's|default.+?via ([0-9a-f:]+).*|"\1"|' | head -n1)
 netip4=$(ip -4 address show dev "$netif" scope global | sed -z -r 's|.*inet ([0-9.]+)/([0-9]+).*|"\1/\2"|')
