@@ -85,7 +85,13 @@ dns='"2620:fe::fe" "9.9.9.9"'
 sshkeys=$(awk '/^[^#]*(ssh-[^#]+)$/ { print "\""$0"\"" }' < /root/.ssh/authorized_keys)
 
 rm /etc/resolv.conf
-echo $dns | sed -r 's|"([^"]+?)"\s*|nameserver \1\n|g' > /etc/resolv.conf
+if [[ -n "${netip4}" ]]; then
+  echo $dns | sed -r 's|"([^"]+?)"\s*|nameserver \1\n|g' > /etc/resolv.conf
+else
+  # nixos.org doesn't have AAAA records! in 2025!! shameful. fucking incompetent
+  # fix this by MITMing ourselves through https://nat64.net/
+  echo "nameserver 2a01:4f8:c2c:123f::1" > /etc/resolv.conf
+fi
 
 mkdir -p /etc/nixos
 cat > /etc/nixos/configuration.nix <<EOF
