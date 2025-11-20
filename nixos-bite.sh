@@ -70,11 +70,12 @@ if [ "$curram" -lt "$minram" ]; then
   swapon /swap
 fi
 
-netif=$(ip -6 route show default | sed -r 's|default.+?dev ([a-z0-9]+).*|\1|' | head -n1)
+netif=$(ip -6 route show default | sed -r 's|.*default.+?dev ([a-z0-9]+).*|\1|' | head -n1)
+netifx=enx$(ip link show dev "$netif" | grep link/ether | sed -r 's|.*link/ether ([a-f0-9]{2}):([a-f0-9]{2}):([a-f0-9]{2}):([a-f0-9]{2}):([a-f0-9]{2}):([a-f0-9]{2}).*|\1\2\3\4\5\6|')
 netip6=$(ip -6 address show dev "$netif" scope global | sed -z -r 's|.*inet6 ([0-9a-f:]+)/([0-9]+).*|"\1/\2"|')
-netgw6=$(ip -6 route show dev "$netif" default | sed -r 's|default.+?via ([0-9a-f:]+).*|"\1"|' | head -n1)
+netgw6=$(ip -6 route show dev "$netif" default | sed -r 's|.*default.+?via ([0-9a-f:]+).*|"\1"|' | head -n1)
 netip4=$(ip -4 address show dev "$netif" scope global | sed -z -r 's|.*inet ([0-9.]+)/([0-9]+).*|"\1/\2"|')
-netgw4=$(ip -4 route show dev "$netif" default | sed -r 's|default.+?via ([0-9.]+).*|"\1"|' | head -n1)
+netgw4=$(ip -4 route show dev "$netif" default | sed -r 's|.*default.+?via ([0-9.]+).*|"\1"|' | head -n1)
 
 route=""
 [[ -n "${netgw4}" ]] && route="$route { Gateway = $netgw4; GatewayOnLink = true; }"
@@ -120,7 +121,7 @@ cat > /etc/nixos/configuration.nix <<EOF
   systemd.network = {
     enable = true;
     networks."40-wan" = {
-      matchConfig.Name = "en*";
+      matchConfig.Name = "$netifx";
       address = [ $netip6 $netip4 ];
       routes = [ $route ];
       dns = [ $dns ];
