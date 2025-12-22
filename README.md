@@ -67,7 +67,7 @@ If you tried _nixos-bite_ and found it to either succeed or fail on a configurat
 
 _nixos-bite_ does not require configuration to do its job: the script examines the environment and takes appropriate action (or fails to do so if the environment differs too much from what it expects). It does, however, accept options that change how the resulting system is configured.
 
-  * The `NIX_CHANNEL` environment variable configures the nixpkgs release channel. Default: `nixos-25.05`.
+  * The `NIX_CHANNEL` environment variable configures the nixpkgs release channel. Default: `nixos-25.11`.
   * The `NIX_STATE_VERSION` environment variable configures the `system.stateVersion` attribute. Default: extracted from `NIX_CHANNEL` value.
   * The `NIX_SETUP` environment variable accepts a path to an executable (typically, a shell script) that is copied to the installed system and executed once after the first boot. Default: prints a greeting to `tty1`.
 

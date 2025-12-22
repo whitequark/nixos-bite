@@ -5,7 +5,7 @@ set -eo pipefail
 # see https://codeberg.org/whitequark/nixos-bite for details. quick reference:
 #  - `ssh root@${HOST} bash < nixos-bite.sh` installs NixOS, leaving the result for examination
 #  - `ssh root@${HOST} bash -s reboot < nixos-bite.sh` reboots into the freshly installed NixOS
-#  - `export NIX_CHANNEL=nixos-25.05` sets the nixpkgs release channel
+#  - `export NIX_CHANNEL=nixos-25.11` sets the nixpkgs release channel
 #  - `export NIX_SETUP=/root/script.sh` arranges the script to be executed on first NixOS boot
 #  - the snippet below, when used as cloud-init user data, installs and reboots into NixOS
 : <<SNIP
@@ -20,7 +20,7 @@ SNIP
 # scope and implementation. the author of nixos-bite is grateful for the effort that went into
 # making nixos-infect.
 
-[[ -z "$NIX_CHANNEL" ]] && NIX_CHANNEL="nixos-25.05"
+[[ -z "$NIX_CHANNEL" ]] && NIX_CHANNEL="nixos-25.11"
 [[ -z "$NIX_STATE_VERSION" ]] && NIX_STATE_VERSION="$(echo $NIX_CHANNEL | sed -r 's/[a-z-]+([0-9.]+)/\1/')"
 if [[ -z "$NIX_STATE_VERSION" ]]; then echo "Provide explicit NIX_STATE_VERSION= for $NIX_CHANNEL" >&2; exit 1; fi
 if [[ ! -e "$NIX_SETUP" ]]; then
