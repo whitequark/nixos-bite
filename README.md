@@ -55,6 +55,7 @@ While _nixos-bite_ isn't tied to a specific provider, differences in environment
 | 2025-10-05 | [Vultr]       | vc2-1c-0.5gb-v6          | Debian 13 (trixie)    | NixOS 25.05       | ⛔ (not enough RAM) |
 | 2025-11-20 | [UpCloud]     | 1/1GB/10GB, IPv6 only    | Debian 13 (trixie)    | NixOS 25.05       | ✅      |
 | 2026-01-01 | [Contabo]     | Cloud VPS 20 NVMe, IPv4  | Debian 13 (trixie)    | NixOS 25.11       | ✅      |
+| 2026-02-14 | [OVHcloud]    | VPS-1                    | Debian 13 (trixie)    | NixOS 25.11       | ✅      |
 
 If you tried _nixos-bite_ and found it to either succeed or fail on a configuration not listed above, please submit a pull request updating the compatibility table.
 
@@ -63,6 +64,7 @@ If you tried _nixos-bite_ and found it to either succeed or fail on a configurat
 [Vultr]: https://vultr.com/
 [UpCloud]: https://upcloud.com/
 [Contabo]: https://contabo.com/
+[OVHcloud]: https://www.ovhcloud.com/
 
 
 ## Options
