@@ -62,7 +62,7 @@ fi
 minram=4096 # MiB
 curram=$(awk '/MemTotal/ {print int($2/1024)}' /proc/meminfo)
 swapsz=$(( $minram - $curram ))
-if [ "$curram" -lt "$minram" ]; then
+if [[ "$curram" -lt "$minram" ]]; then
   swapdev="swapDevices = [{ device = \"/swap\"; size = $swapsz; }];"
   swapoff -a
   dd if=/dev/zero of=/swap bs=1M count=$swapsz
@@ -71,6 +71,9 @@ if [ "$curram" -lt "$minram" ]; then
 fi
 
 netif=$(ip -6 route show default | sed -r 's|.*default.+?dev ([a-z0-9]+).*|\1|' | head -n1)
+if [[ -z "$netif" ]]; then
+  netif=$(ip -4 route show default | sed -r 's|.*default.+?dev ([a-z0-9]+).*|\1|' | head -n1)
+fi
 netifx=enx$(ip link show dev "$netif" | grep link/ether | sed -r 's|.*link/ether ([a-f0-9]{2}):([a-f0-9]{2}):([a-f0-9]{2}):([a-f0-9]{2}):([a-f0-9]{2}):([a-f0-9]{2}).*|\1\2\3\4\5\6|')
 netip6=$(ip -6 address show dev "$netif" scope global | sed -z -r 's|.*inet6 ([0-9a-f:]+)/([0-9]+).*|"\1/\2"|')
 netgw6=$(ip -6 route show dev "$netif" default | sed -r 's|.*default.+?via ([0-9a-f:]+).*|"\1"|' | head -n1)
