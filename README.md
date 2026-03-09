@@ -97,7 +97,6 @@ _nixos-bite_ does not attempt to do everything for everyone; rather, it focuses 
     * IPv4-only, IPv6-only, and dual stack configurations are all supported.
     * The generated Nix configuration hardcodes the IP address(es) and default route(s) at the point of running the script.
     * DHCP is neither recognized nor configured. (This may change in the future.)
-  * Use hardcoded DNS servers; currently [Quad9]. (This may change in the future.)
   * Be (fairly) safe. The diversity of VPS providers is boundless, and edge cases are abound.
     * The default action is to install and configure NixOS, then finish without rebooting. While this is destructive (`/boot` is wiped and repopulated; the bootloader is reconfigured), it keeps the machine accessible so that gross configuration errors may be corrected.
     * Running the script on a previously unknown VPS provider should be an opportunity to explore, not a rush to reimage.
@@ -122,7 +121,7 @@ _nixos-bite_ is implemented as a straight line sequence of actions with a minimu
 4. Bootloader is configured depending on whether the system uses BIOS or UEFI (indicated by presence of `/sys/firmware/efi`).
 5. **For systems with less than 4 GiB of RAM:** Up to 4 GiB of swap is added as a file `/swap` on the root filesystem. Any existing swap partitions are ignored.
 6. Host name, IPv4/IPv6 addresses, and default routes are extracted.
-7. DNS resolver configuration is replaced with [Quad9].
+7. DNS resolver configuration is replaced with servers specified in `$NIX_DNS` ([Quad9] by default).
 8. Authorized SSH public keys for user `root` are extracted.
 9. NixOS is configured for a typical QEMU guest system, with [systemd-networkd] and [predictable network interface names][ifnames] enabled.
    * Root, boot (for UEFI systems), and swap (for low-RAM systems) mountpoints are configured with the extracted settings.
