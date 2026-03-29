@@ -88,7 +88,7 @@ route=""
 
 dns="$(sed -z -r 's,([0-9a-f:]+|[0-9.]+),"\1",g' <<<"${NIX_DNS}")"
 
-sshkeys=$(awk '/^[^#]*(ssh-[^#]+)$/ { print "\""$0"\"" }' < /root/.ssh/authorized_keys)
+sshkeys=$(awk '/^[[:space:]]*($|#)/ { next } { print "\""$0"\"" }' < /root/.ssh/authorized_keys)
 
 rm /etc/resolv.conf
 if [[ -n "${netip4}" ]]; then
