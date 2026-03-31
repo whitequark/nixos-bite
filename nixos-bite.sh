@@ -185,6 +185,8 @@ rm -fv /nix/var/nix/profiles/default*
 /nix/var/nix/profiles/system/sw/bin/nix-collect-garbage
 
 touch /etc/NIXOS
+echo > /etc/NIXOS_LUSTRATE
+echo swap >> /etc/NIXOS_LUSTRATE
 echo etc/nixos >> /etc/NIXOS_LUSTRATE
 echo etc/resolv.conf >> /etc/NIXOS_LUSTRATE
 echo root/.nix-defexpr/channels >> /etc/NIXOS_LUSTRATE
