@@ -38,11 +38,11 @@ fi
 apt-get update -y
 apt-get install -y bzip2 xz-utils curl iproute2 dosfstools
 
-rootfsdev=$(mount | grep "on / type" | awk '{ print $1 }')
-rootfstype=$(mount | grep "on / type" | awk '{ print $5 }')
+rootfsdev=$(awk '$2 == "/" { print $1 }' /proc/mounts)
+rootfstype=$(awk '$2 == "/" { print $3 }' /proc/mounts)
 
-bootfsdev=$(mount | grep "on /boot" | awk '{ print $1 }' || true)
-bootfstype=$(mount | grep "on /boot" | awk '{ print $5 }' || true)
+bootfsdev=$(awk '$2 ~ "/boot" { print $1 }' /proc/mounts)
+bootfstype=$(awk '$2 ~ "/boot" { print $3 }' /proc/mounts)
 
 [ "$rootfstype" = "ext2" ] && e2label "$rootfsdev" root || true
 [ "$rootfstype" = "ext3" ] && e2label "$rootfsdev" root || true
