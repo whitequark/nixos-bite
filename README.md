@@ -45,21 +45,23 @@ Alternately, run the following commands on your VPS while logged in as `root`:
 
 While _nixos-bite_ isn't tied to a specific provider, differences in environment may cause it to fail. The following configurations are known to have succeeded:
 
-| Date       | Provider      | Configuration            | Source OS             | Target OS         | Result |
-| ---------- | ------------- | ------------------------ | --------------------- | ----------------- | ------ |
-| 2025-10-05 | [Datalix]     | IPv6 Only, Small, BIOS   | Debian 13 (trixie)    | NixOS 25.05       | ✅      |
-| 2025-10-05 | [Datalix]     | IPv6 Only, Small, UEFI   | Debian 13 (trixie)    | NixOS 25.05       | ✅      |
-| 2025-10-05 | [Hetzner]     | CPX11 (Intel/AMD)        | Debian 13 (trixie)    | NixOS 25.05       | ✅      |
-| 2025-10-05 | [Hetzner]     | CAX11 (Ampere)           | Debian 13 (trixie)    | NixOS 25.05       | ✅      |
-| 2025-10-05 | [Vultr]       | vc2-1c-1gb               | Debian 13 (trixie)    | NixOS 25.05       | ✅      |
-| 2025-10-05 | [Vultr]       | vc2-1c-0.5gb-v6          | Debian 13 (trixie)    | NixOS 25.05       | ⛔ (not enough RAM) |
-| 2025-11-20 | [UpCloud]     | 1/1GB/10GB, IPv6 only    | Debian 13 (trixie)    | NixOS 25.05       | ✅      |
-| 2026-01-01 | [Contabo]     | Cloud VPS 20 NVMe, IPv4  | Debian 13 (trixie)    | NixOS 25.11       | ✅      |
-| 2026-02-14 | [OVHcloud]    | VPS-1                    | Debian 13 (trixie)    | NixOS 25.11       | ✅      |
-| 2026-03-29 | [GCP]         | e2-medium                | Debian 13 (trixie)    | NixOS 25.11       | ✅      |
-| 2026-03-29 | [GCP]         | t2d-standard-4           | Debian 13 (trixie)    | NixOS 25.11       | ✅      |
-| 2006-06-03 | [Datalix]     | Ryzen Small, BIOS        | Debian 13 (trixie)    | NixOS 26.05       | ✅      |
-| 2006-06-07 | [IONOS]       | VPS XS (1-1-10)          | Debian 13 (trixie)    | NixOS 26.05       | ✅      |
+| Date       | Provider   | Configuration                    | Source OS          | Target OS   | Result              |
+| ---------- | ---------- | -------------------------------- | ------------------ | ----------- | ------------------- |
+| 2025-10-05 | [Datalix]  | IPv6 Only, Small, BIOS           | Debian 13 (trixie) | NixOS 25.05 | ✅                  |
+| 2025-10-05 | [Datalix]  | IPv6 Only, Small, UEFI           | Debian 13 (trixie) | NixOS 25.05 | ✅                  |
+| 2025-10-05 | [Hetzner]  | CPX11 (Intel/AMD)                | Debian 13 (trixie) | NixOS 25.05 | ✅                  |
+| 2025-10-05 | [Hetzner]  | CAX11 (Ampere)                   | Debian 13 (trixie) | NixOS 25.05 | ✅                  |
+| 2025-10-05 | [Vultr]    | vc2-1c-1gb                       | Debian 13 (trixie) | NixOS 25.05 | ✅                  |
+| 2025-10-05 | [Vultr]    | vc2-1c-0.5gb-v6                  | Debian 13 (trixie) | NixOS 25.05 | ⛔ (not enough RAM) |
+| 2025-11-20 | [UpCloud]  | 1/1GB/10GB, IPv6 only            | Debian 13 (trixie) | NixOS 25.05 | ✅                  |
+| 2026-01-01 | [Contabo]  | Cloud VPS 20 NVMe, IPv4          | Debian 13 (trixie) | NixOS 25.11 | ✅                  |
+| 2026-02-14 | [OVHcloud] | VPS-1                            | Debian 13 (trixie) | NixOS 25.11 | ✅                  |
+| 2026-03-29 | [GCP]      | e2-medium                        | Debian 13 (trixie) | NixOS 25.11 | ✅                  |
+| 2026-03-29 | [GCP]      | t2d-standard-4                   | Debian 13 (trixie) | NixOS 25.11 | ✅                  |
+| 2026-05-06 | [Scaleway] | STARDUST1-S, 1GB/10GB, IPv6 Only | Debian 13 (trixie) | NixOS 25.05 | ✅                  |
+| 2026-05-05 | [Scaleway] | DEV1-S, 2GB/10GB, IPv6 Only      | Debian 13 (trixie) | NixOS 25.05 | ✅                  |
+| 2006-06-03 | [Datalix]  | Ryzen Small, BIOS                | Debian 13 (trixie) | NixOS 26.05 | ✅                  |
+| 2006-06-07 | [IONOS]    | VPS XS (1-1-10)                  | Debian 13 (trixie) | NixOS 26.05 | ✅                  |
 
 If you tried _nixos-bite_ and found it to either succeed or fail on a configuration not listed above, please submit a pull request updating the compatibility table.
 
@@ -71,6 +73,7 @@ If you tried _nixos-bite_ and found it to either succeed or fail on a configurat
 [OVHcloud]: https://www.ovhcloud.com/
 [GCP]: https://cloud.google.com/
 [IONOS]: https://www.ionos.com
+[Scaleway]: https://www.scaleway.com/
 
 
 ## Options

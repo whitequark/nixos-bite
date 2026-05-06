@@ -65,13 +65,15 @@ fi
 
 minram=4096 # MiB
 curram=$(awk '/MemTotal/ {print int($2/1024)}' /proc/meminfo)
-printf "[^,…,^] Evaluating RAM required: %dMiB, current: %dMiB" "$minram" "$curram"
+printf "[^,…,^] Evaluating RAM required: %d MiB, current: %d MiB\n" "$minram" "$curram"
+
 swapsz=$(( $minram - $curram ))
 if [[ "$curram" -lt "$minram" ]]; then
-  printf "  -> insufficient RAM, creating swap of %dMiB\n" "$swapsz"
   swapdev="swapDevices = [{ device = \"/swap\"; size = $swapsz; }];"
+  printf "  -> insufficient RAM, creating swap of %d MiB to perform installation\n" "$swapsz"
   swapoff -a
   dd if=/dev/zero of=/swap bs=1M count=$swapsz
+  chmod 600 /swap
   mkswap /swap
   swapon /swap
 fi
@@ -120,8 +122,8 @@ cat > /etc/nixos/configuration.nix <<EOF
   boot.initrd.availableKernelModules = [ "ata_piix" "uhci_hcd" "xen_blkfront" ];
   boot.initrd.kernelModules = [ "nvme" ];
   boot.tmp.cleanOnBoot = true;
-  $swapdev
   zramSwap.enable = true;
+  $swapdev
 
   # Networking
   networking = {
@@ -350,7 +352,6 @@ rm -fv /nix/var/nix/profiles/default*
 
 touch /etc/NIXOS
 printf '' > /etc/NIXOS_LUSTRATE
-echo swap >> /etc/NIXOS_LUSTRATE
 echo etc/nixos >> /etc/NIXOS_LUSTRATE
 echo etc/resolv.conf >> /etc/NIXOS_LUSTRATE
 echo root/.nix-defexpr/channels >> /etc/NIXOS_LUSTRATE
@@ -359,13 +360,21 @@ echo root/.nix-defexpr/channels >> /etc/NIXOS_LUSTRATE
 printf "[^,…,^] Cleaning up...\n"
 # place bootloader files into /boot partition only on EFI systems
 if [[ -n "$bootfsdev" ]]; then
+  printf "  -> Cleaning boot filesystem\n"
   umount $bootfsdev
   rm -fr /boot/*
   if [[ -d /sys/firmware/efi ]]; then
+    printf "  -> Cleaning EFI boot files\n"
     mount $bootfsdev /boot
     rm -fr /boot/*
   fi
 fi
+if [ -f "/swap" ]; then
+  printf "  -> Cleaning swap\n"
+  swapoff /swap
+  rm -f /swap
+fi
+
 /nix/var/nix/profiles/system/bin/switch-to-configuration boot
 
 if [[ -d /sys/firmware/efi ]]; then
