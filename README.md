@@ -146,4 +146,8 @@ _nixos-bite_ is implemented as a straight line sequence of actions with a minimu
 
 ## License
 
-[0-clause BSD](LICENSE.txt). While _nixos-bite_ is a conceptual derivative of [NixOS-Infect], it is not a "derivative work" for licensing purposes.
+Except as otherwise described in code comments, _nixos-bite_ is provided under the [0-clause BSD](LICENSE.txt) license.
+
+_nixos-bite_ incorporates a portion of code from Nixpkgs, which is provided under the MIT license. Note that this portion of the code has different license requirements.
+
+While _nixos-bite_ is a conceptual derivative of [NixOS-Infect], it is not a "derivative work" for licensing purposes.
