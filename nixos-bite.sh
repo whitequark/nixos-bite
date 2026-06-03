@@ -100,6 +100,62 @@ else
 fi
 
 mkdir -p /etc/nixos
+
+cat > /etc/nixos/configuration.nix <<EOF
+{ pkgs, modulesPath, ... }: {
+  imports = [
+    (modulesPath + "/profiles/qemu-guest.nix")
+    ./lustrate.nix
+  ];
+  system.stateVersion = "$NIX_STATE_VERSION";
+  nix.settings.experimental-features = "flakes nix-command";
+
+  # Hardware
+  fileSystems."/" = { device = "$rootfsdev"; fsType = "$rootfstype"; };
+  $bootldr
+  boot.loader.timeout = 30;
+  boot.initrd.availableKernelModules = [ "ata_piix" "uhci_hcd" "xen_blkfront" ];
+  boot.initrd.kernelModules = [ "nvme" ];
+  boot.tmp.cleanOnBoot = true;
+  $swapdev
+  zramSwap.enable = true;
+
+  # Networking
+  networking = {
+    useNetworkd = true;
+    usePredictableInterfaceNames = true;
+    hostName = "$(hostname -s)";
+    domain = "$(hostname -d)";
+  };
+  systemd.network = {
+    enable = true;
+    networks."40-wan" = {
+      matchConfig.Name = "$netifx";
+      address = [ $netip6 $netip4 ];
+      routes = [ $route ];
+      dns = [ $dns ];
+    };
+  };
+
+  # SSH
+  services.openssh.enable = true;
+  users.users.root.openssh.authorizedKeys.keys = [ $sshkeys ];
+
+  # Setup
+  boot.initrd.systemd.lustrate.enable = true; # From ./lustrate.nix
+  systemd.services.setup = rec {
+    wantedBy = [ "basic.target" ];
+    after = wantedBy;
+    serviceConfig = {
+      Type = "oneshot";
+      ConditionPathExists = "/etc/nixos/setup.sh";
+      ExecStart = "/etc/nixos/setup.sh";
+      ExecStartPost = "\${pkgs.coreutils}/bin/rm /etc/nixos/setup.sh";
+    };
+  };
+}
+EOF
+
 cat > /etc/nixos/lustrate.nix <<'EOF'
 {
   config,
@@ -242,60 +298,6 @@ in
 
         # SPDX-SnippetEnd
       '';
-    };
-  };
-}
-EOF
-cat > /etc/nixos/configuration.nix <<EOF
-{ pkgs, modulesPath, ... }: {
-  imports = [
-    (modulesPath + "/profiles/qemu-guest.nix")
-    ./lustrate.nix
-  ];
-  system.stateVersion = "$NIX_STATE_VERSION";
-  nix.settings.experimental-features = "flakes nix-command";
-
-  # Hardware
-  fileSystems."/" = { device = "$rootfsdev"; fsType = "$rootfstype"; };
-  $bootldr
-  boot.loader.timeout = 30;
-  boot.initrd.availableKernelModules = [ "ata_piix" "uhci_hcd" "xen_blkfront" ];
-  boot.initrd.kernelModules = [ "nvme" ];
-  boot.tmp.cleanOnBoot = true;
-  $swapdev
-  zramSwap.enable = true;
-
-  # Networking
-  networking = {
-    useNetworkd = true;
-    usePredictableInterfaceNames = true;
-    hostName = "$(hostname -s)";
-    domain = "$(hostname -d)";
-  };
-  systemd.network = {
-    enable = true;
-    networks."40-wan" = {
-      matchConfig.Name = "$netifx";
-      address = [ $netip6 $netip4 ];
-      routes = [ $route ];
-      dns = [ $dns ];
-    };
-  };
-
-  # SSH
-  services.openssh.enable = true;
-  users.users.root.openssh.authorizedKeys.keys = [ $sshkeys ];
-
-  # Setup
-  boot.initrd.systemd.lustrate.enable = true; # From ./lustrate.nix
-  systemd.services.setup = rec {
-    wantedBy = [ "basic.target" ];
-    after = wantedBy;
-    serviceConfig = {
-      Type = "oneshot";
-      ConditionPathExists = "/etc/nixos/setup.sh";
-      ExecStart = "/etc/nixos/setup.sh";
-      ExecStartPost = "\${pkgs.coreutils}/bin/rm /etc/nixos/setup.sh";
     };
   };
 }
