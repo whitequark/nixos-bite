@@ -58,6 +58,7 @@ While _nixos-bite_ isn't tied to a specific provider, differences in environment
 | 2026-02-14 | [OVHcloud]    | VPS-1                    | Debian 13 (trixie)    | NixOS 25.11       | ✅      |
 | 2026-03-29 | [GCP]         | e2-medium                | Debian 13 (trixie)    | NixOS 25.11       | ✅      |
 | 2026-03-29 | [GCP]         | t2d-standard-4           | Debian 13 (trixie)    | NixOS 25.11       | ✅      |
+| 2006-06-03 | [Datalix]     | Ryzen Small, BIOS        | Debian 13 (trixie)    | NixOS 26.05       | ✅      |
 
 If you tried _nixos-bite_ and found it to either succeed or fail on a configuration not listed above, please submit a pull request updating the compatibility table.
 
@@ -75,7 +76,7 @@ If you tried _nixos-bite_ and found it to either succeed or fail on a configurat
 _nixos-bite_ does not require configuration to do its job: the script examines the environment and takes appropriate action (or fails to do so if the environment differs too much from what it expects). It does, however, accept options that change how the resulting system is configured.
 
   * The `NIX_DNS` environment variable configures the DNS servers. Default: `2020:fe::10 9.9.9.10`.
-  * The `NIX_CHANNEL` environment variable configures the nixpkgs release channel. Default: `nixos-25.11`.
+  * The `NIX_CHANNEL` environment variable configures the nixpkgs release channel. Default: `nixos-26.05`.
   * The `NIX_STATE_VERSION` environment variable configures the `system.stateVersion` attribute. Default: extracted from `NIX_CHANNEL` value.
   * The `NIX_SETUP` environment variable accepts a path to an executable (typically, a shell script) that is copied to the installed system and executed once after the first boot. Default: prints a greeting to `tty1`.
 
