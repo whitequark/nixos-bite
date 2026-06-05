@@ -21,6 +21,8 @@ SNIP
 # scope and implementation. the author of nixos-bite is grateful for the effort that went into
 # making nixos-infect.
 
+printf "[^,…,^] Starting nixos-bite...\n"
+
 [[ -z "$NIX_DNS" ]] && NIX_DNS="2620:fe::10 9.9.9.10"
 [[ -z "$NIX_CHANNEL" ]] && NIX_CHANNEL="nixos-26.05"
 [[ -z "$NIX_STATE_VERSION" ]] && NIX_STATE_VERSION="$(echo $NIX_CHANNEL | sed -r 's/[a-z-]+([0-9.]+)/\1/')"
@@ -63,8 +65,10 @@ fi
 
 minram=4096 # MiB
 curram=$(awk '/MemTotal/ {print int($2/1024)}' /proc/meminfo)
+printf "[^,…,^] Evaluating RAM required: %dMiB, current: %dMiB" "$minram" "$curram"
 swapsz=$(( $minram - $curram ))
 if [[ "$curram" -lt "$minram" ]]; then
+  printf "  -> insufficient RAM, creating swap of %dMiB\n" "$swapsz"
   swapdev="swapDevices = [{ device = \"/swap\"; size = $swapsz; }];"
   swapoff -a
   dd if=/dev/zero of=/swap bs=1M count=$swapsz
@@ -72,6 +76,7 @@ if [[ "$curram" -lt "$minram" ]]; then
   swapon /swap
 fi
 
+printf "[^,…,^] Evaluating network interfaces...\n"
 netif=$(ip -6 route show default | sed -r 's|.*default.+?dev ([a-z0-9]+).*|\1|' | head -n1)
 if [[ -z "$netif" ]]; then
   netif=$(ip -4 route show default | sed -r 's|.*default.+?dev ([a-z0-9]+).*|\1|' | head -n1)
@@ -83,16 +88,20 @@ netip4=$(ip -4 address show dev "$netif" scope global | sed -z -r 's|.*inet ([0-
 netgw4=$(ip -4 route show dev "$netif" default | sed -r 's|.*default.+?via ([0-9.]+).*|"\1"|' | head -n1)
 
 route=""
-[[ -n "${netgw4}" ]] && route="$route { Gateway = $netgw4; GatewayOnLink = true; }"
-[[ -n "${netgw6}" ]] && route="$route { Gateway = $netgw6; }"
+[[ -n "${netgw4}" ]] && route="$route { Gateway = $netgw4; GatewayOnLink = true; }" && printf "  -> ipv4 gateway: %s\n" "$netgw4"
+[[ -n "${netgw6}" ]] && route="$route { Gateway = $netgw6; }" && printf "  -> ipv6 gateway: %s\n" "$netgw6"
 
 dns="$(sed -z -r 's,([0-9a-f:]+|[0-9.]+),"\1",g' <<<"${NIX_DNS}")"
+printf "  -> dns: '%s'\n" "$dns"
 
+printf "[^,…,^] Gathering SSH keys...\n"
 sshkeys=$(awk '/^[[:space:]]*($|#)/ { next } { print "\""$0"\"" }' < /root/.ssh/authorized_keys)
 
 rm /etc/resolv.conf
+printf "[^,…,^] Configuring DNS resolver\n"
 echo $dns | sed -r 's|"([^"]+?)"\s*|nameserver \1\n|g' > /etc/resolv.conf
 
+printf "[^,…,^] Writing 'configuration.nix' to disk...\n"
 mkdir -p /etc/nixos
 
 cat > /etc/nixos/configuration.nix <<EOF
@@ -302,6 +311,7 @@ chmod +x /etc/nixos/setup.sh
 
 mkdir -p -m 0755 /nix
 
+printf "[^,…,^] Adding nixbld group and users...\n"
 addgroup --system --gid 30000 nixbld || true
 for i in {1..10}; do
   adduser --system --no-create-home nixbld$i || true
@@ -311,19 +321,24 @@ done
 [[ -z "$USER" ]] && export USER=root
 [[ -z "$HOME" ]] && export HOME=/root
 
+printf "[^,…,^] Installing Nix...\n"
 # Not https://nixos.org/nix/install since nixos.org not work on IPv6-only. They should get better providers.
 # See https://github.com/NixOS/infra/issues/873
 curl -sL https://channels.nixos.org/nix-latest/install | sh -s -- --no-channel-add
 
 source /root/.nix-profile/etc/profile.d/nix.sh
 
+printf "[^,…,^] Removing nixpkgs channel...\n"
 nix-channel --remove nixpkgs
+
+printf "[^,…,^] Adding nixos channel...\n"
 # Not https://nixos.org/channels/$NIX_CHANNEL since nixos.org does not work on IPv6-only
 nix-channel --add "https://channels.nixos.org/$NIX_CHANNEL" nixos
 nix-channel --update
 
 export NIXOS_CONFIG=/etc/nixos/configuration.nix
 
+printf "[^,…,^] Setting up Nix environment...\n"
 nix-env --set \
   -I nixpkgs=/root/.nix-defexpr/channels/nixos \
   -f '<nixpkgs/nixos>' \
@@ -341,6 +356,7 @@ echo etc/resolv.conf >> /etc/NIXOS_LUSTRATE
 echo root/.nix-defexpr/channels >> /etc/NIXOS_LUSTRATE
 (cd / && ls etc/ssh/ssh_host_*_key* || true) >> /etc/NIXOS_LUSTRATE
 
+printf "[^,…,^] Cleaning up...\n"
 # place bootloader files into /boot partition only on EFI systems
 if [[ -n "$bootfsdev" ]]; then
   umount $bootfsdev
