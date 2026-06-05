@@ -134,7 +134,7 @@ _nixos-bite_ is implemented as a straight line sequence of actions with a minimu
    * User `root` is configured with the extracted SSH public keys.
 10. The `NIX_SETUP` script is copied to `/etc/nixos/setup.sh` and made executable. An oneshot systemd service is configured that executes this script and then removes it on successful execution.
 11. The `/nix` directory and `nixbldN` users are created, as in [multi-user mode](https://nix.dev/manual/nix/2.28/installation/multi-user.html).
-12. The Nix channel `https://nixos.org/channels/$NIX_CHANNEL` is configured with the name `nixos`.
+12. The Nix channel `https://channels.nixos.org/$NIX_CHANNEL` is configured with the name `nixos`. (The `nixos.org` domain is avoided since it does not have an IPv6 address due to [a combination of upstream provider reasons][nixos-org-ipv6-problems].)
 13. [`NIXOS_LUSTRATE`] is configured to preserve `/etc/nixos`, `/etc/resolv.conf`, and the SSH host key.
 14. `/boot` is emptied (on both the root and boot filesystems).
     * **For UEFI firmware:** the boot filesystem is then mounted at `/boot`.
@@ -143,6 +143,7 @@ _nixos-bite_ is implemented as a straight line sequence of actions with a minimu
 16. The command-line arguments of the script are executed as a new command. (Typically, this will be nothing or `reboot`.)
 
 [`NIXOS_LUSTRATE`]: https://nixos.org/manual/nixos/stable/#sec-installing-from-other-distro
+[nixos-org-ipv6-problems]: https://github.com/NixOS/infra/issues/873
 
 
 ## License

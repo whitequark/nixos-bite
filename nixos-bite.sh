@@ -317,12 +317,15 @@ done
 [[ -z "$USER" ]] && export USER=root
 [[ -z "$HOME" ]] && export HOME=/root
 
-curl -sL https://nixos.org/nix/install | sh -s -- --no-channel-add
+# Not https://nixos.org/nix/install since nixos.org not work on IPv6-only. They should get better providers.
+# See https://github.com/NixOS/infra/issues/873
+curl -sL https://channels.nixos.org/nix-latest/install | sh -s -- --no-channel-add
 
 source /root/.nix-profile/etc/profile.d/nix.sh
 
 nix-channel --remove nixpkgs
-nix-channel --add "https://nixos.org/channels/$NIX_CHANNEL" nixos
+# Not https://nixos.org/channels/$NIX_CHANNEL since nixos.org does not work on IPv6-only
+nix-channel --add "https://channels.nixos.org/$NIX_CHANNEL" nixos
 nix-channel --update
 
 export NIXOS_CONFIG=/etc/nixos/configuration.nix
