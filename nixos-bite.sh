@@ -215,7 +215,7 @@ in
           "sysroot-etc.mount"
         ];
       };
-      requiredBy = [ "initrd-root-fs.target" ];
+      requiredBy = [ "initrd.target" ];
 
       serviceConfig = {
         Type = "oneshot";
