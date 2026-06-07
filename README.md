@@ -59,6 +59,7 @@ While _nixos-bite_ isn't tied to a specific provider, differences in environment
 | 2026-03-29 | [GCP]         | e2-medium                | Debian 13 (trixie)    | NixOS 25.11       | ✅      |
 | 2026-03-29 | [GCP]         | t2d-standard-4           | Debian 13 (trixie)    | NixOS 25.11       | ✅      |
 | 2006-06-03 | [Datalix]     | Ryzen Small, BIOS        | Debian 13 (trixie)    | NixOS 26.05       | ✅      |
+| 2006-06-07 | [IONOS]       | VPS XS (1-1-10)          | Debian 13 (trixie)    | NixOS 26.05       | ✅      |
 
 If you tried _nixos-bite_ and found it to either succeed or fail on a configuration not listed above, please submit a pull request updating the compatibility table.
 
@@ -69,6 +70,7 @@ If you tried _nixos-bite_ and found it to either succeed or fail on a configurat
 [Contabo]: https://contabo.com/
 [OVHcloud]: https://www.ovhcloud.com/
 [GCP]: https://cloud.google.com/
+[IONOS]: https://www.ionos.com
 
 
 ## Options
